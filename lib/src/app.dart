@@ -16,11 +16,7 @@ class App extends StatelessWidget {
           '/login': (BuildContext context) => new LoginScreen(),
           '/pin': (BuildContext context) => new IndexPage(),
         },
-        // routes: {
-        //   '/': (context) => LoginScreen(),
-        //   '/secondscreen': (context) => SecondScreen(),
-        //   '/home': (context) => IndexPage(),
-        // },
+      
       ),
     );
   }
