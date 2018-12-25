@@ -53,17 +53,15 @@ class _LoadingState extends State<LoadingPage> {
       decoration: BoxDecoration(
         // Box decoration takes a gradient
         gradient: RadialGradient(
-            center: const Alignment(0, -0.5), // near the top right
+            center: Alignment.center, // near the top right
             radius: 0.5,
             colors: <Color>[
-              // const Color.fromRGBO(1, 6, 100, 162),
-              // const Color.fromRGBO(0, 10, 74, 130),
               Color(getColorHexFromStr('#049ede')),
               Color(getColorHexFromStr('#0569a8'))
             ]),
       ),
       child: new Center(
-        child: new Image.asset('assets/blue_logo.png'),
+        child: new Image.asset('assets/white_logo.png'),
       ),
     ));
   }
