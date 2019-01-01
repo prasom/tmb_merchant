@@ -41,5 +41,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use face id to login?</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Share file</string>
+
+	
 </dict>
 </plist>
