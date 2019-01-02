@@ -32,8 +32,6 @@ dependencies:
   shared_preferences:
   outline_material_icons:
   local_auth:
-  advanced_share:
-  flutter_share_me: ^0.1.2
   image_share: ^0.0.2
   http: ^0.12.0
 
