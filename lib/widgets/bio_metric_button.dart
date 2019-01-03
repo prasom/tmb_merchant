@@ -50,7 +50,7 @@ class _BioMetricButtonState extends State<BioMetricButton> {
           useErrorDialogs: true,
           stickyAuth: false);
       if (authenticated) {
-        bloc.emitEvent(AuthenticationEventPinLogin());
+        bloc.emitEvent(AuthenticationEventPinLogin(faceId: true));
       }
     } on PlatformException catch (e) {
       print(e);

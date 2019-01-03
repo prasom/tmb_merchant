@@ -16,7 +16,12 @@ class AuthenticationEventLogin extends AuthenticationEvent {
         );
 }
 
-class AuthenticationEventPinLogin extends AuthenticationEvent {}
+class AuthenticationEventPinLogin extends AuthenticationEvent {
+  final bool faceId;
+
+  AuthenticationEventPinLogin({this.faceId: false});
+}
+
 class AuthenticationEventSetPin extends AuthenticationEvent {}
 
 class AuthenticationEventLogout extends AuthenticationEvent {}

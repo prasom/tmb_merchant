@@ -104,19 +104,19 @@ class AuthenticationPage extends StatelessWidget {
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                           decoration: InputDecoration(
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            border: new UnderlineInputBorder(
-                                borderSide:
-                                    new BorderSide(color: Colors.white)),
-                            labelText: 'Username',
-                            labelStyle: TextStyle(color: Colors.white),
-                            contentPadding: EdgeInsets.only(top: 15,bottom: 10)
-                          ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              border: new UnderlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Colors.white)),
+                              labelText: 'Username',
+                              labelStyle: TextStyle(color: Colors.white),
+                              contentPadding:
+                                  EdgeInsets.only(top: 15, bottom: 10)),
                           controller: _usernameController,
                         ),
                       ),
@@ -134,28 +134,28 @@ class AuthenticationPage extends StatelessWidget {
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                           decoration: InputDecoration(
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            border: new UnderlineInputBorder(
-                                borderSide:
-                                    new BorderSide(color: Colors.white)),
-                            labelText: 'Password',
-                            labelStyle: TextStyle(color: Colors.white),
-                            contentPadding: EdgeInsets.only(top: 15,bottom: 10)
-                          ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              border: new UnderlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Colors.white)),
+                              labelText: 'Password',
+                              labelStyle: TextStyle(color: Colors.white),
+                              contentPadding:
+                                  EdgeInsets.only(top: 15, bottom: 10)),
                           controller: _passwordController,
                           obscureText: true,
                         ),
                       ),
                     ),
                   );
-                  children.add(
-                    SizedBox(height: 50,)
-                  );
+                  children.add(SizedBox(
+                    height: 50,
+                  ));
                   children.add(
                     ListTile(
                       title: ButtonTheme(
@@ -184,12 +184,20 @@ class AuthenticationPage extends StatelessWidget {
 
                   // Display a text if the authentication failed
                   if (state.hasFailed) {
-                    children.add(
-                      Text(
-                        'Authentication failure!',
-                        style: TextStyle(color: Colors.redAccent),
-                      ),
-                    );
+                    _onWidgetDidBuild(() {
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('รหัสผ่านไม่ถูกต้อง!'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    });
+                    // children.add(
+                    //   Text(
+                    //     'Authentication failure!',
+                    //     style: TextStyle(color: Colors.redAccent),
+                    //   ),
+                    // );
                   }
 
                   return Form(
@@ -206,5 +214,11 @@ class AuthenticationPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onWidgetDidBuild(Function callback) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      callback();
+    });
   }
 }

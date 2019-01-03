@@ -44,12 +44,16 @@ class AuthenticationBloc
       yield AuthenticationState.authenticating();
 
       // Simulate a call to the authentication server
-      final currentPin = _pinStorage.join('');
+      var currentPin = _pinStorage.join('');
       final localStoragePin = await _getLocalStoragePin();
+      if(event.faceId){
+        currentPin = localStoragePin;
+      }
       // Inform that we have successfuly authenticated, or not
-      if (currentPin.isNotEmpty) {
+      if (localStoragePin == currentPin) {
         yield AuthenticationState.pinAuthenticated(_pinStorage.join(''));
       } else {
+        await resetPin();
         yield AuthenticationState.failure();
       }
     }
@@ -66,6 +70,7 @@ class AuthenticationBloc
         yield AuthenticationState.pinAuthenticated(_pinStorage.join(''));
         await savePin(_pinStorage.join(''));
       } else {
+        
         yield AuthenticationState.failure();
       }
     }
@@ -113,6 +118,13 @@ class AuthenticationBloc
   // Persistence Functions
   Future savePin(String pin) async {
     await prefs.setString(PreferenceNames.loginPin, pin);
+  }
+
+
+  // Persistence Functions
+  Future resetPin() async {
+    _pinSizeController.add(0);
+    _pinStorage.clear();
   }
 
   // Persistence Functions

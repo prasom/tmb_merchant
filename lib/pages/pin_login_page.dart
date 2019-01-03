@@ -25,8 +25,10 @@ class _PinLoginPageState extends State<PinLoginPage> {
   @override
   Widget build(BuildContext context) {
     AuthenticationBloc bloc = BlocProvider.of<AuthenticationBloc>(context);
-
+    final GlobalKey<ScaffoldState> _scaffoldKey =
+        new GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         color: Colors.white,
         padding: EdgeInsets.all(0.0),
@@ -135,12 +137,24 @@ class _PinLoginPageState extends State<PinLoginPage> {
 
             // Display a text if the authentication failed
             if (state.hasFailed) {
-              children.add(
-                Text(
-                  'Authentication failure!',
-                  style: TextStyle(color: Colors.redAccent),
-                ),
-              );
+              _onWidgetDidBuild(() {
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('รหัสผ่านไม่ถูกต้อง!'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              });
+              // children.add(Positioned(
+              //   bottom: 20,
+              //   left: 60,
+              //   child: Center(
+              //     child: Text(
+              //       'Authentication failure!',
+              //       style: TextStyle(color: Colors.redAccent),
+              //     ),
+              //   ),
+              // ));
             }
 
             return StreamBuilder<int>(
@@ -270,6 +284,12 @@ class _PinLoginPageState extends State<PinLoginPage> {
 
       Navigator.of(context)
           .pushAndRemoveUntil(newRoute, ModalRoute.withName('/pinlogin'));
+    });
+  }
+
+  void _onWidgetDidBuild(Function callback) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      callback();
     });
   }
 }
