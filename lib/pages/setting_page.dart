@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:tmb_merchant/bloc_helpers/bloc_provider.dart';
 import 'package:tmb_merchant/blocs/authentication/authentication_bloc.dart';
 import 'package:tmb_merchant/blocs/authentication/authentication_event.dart';
+import 'package:tmb_merchant/widgets/disable_bio_button.dart';
+import 'package:tmb_merchant/widgets/log_out_button.dart';
 
 class SettingPage extends StatelessWidget {
+  var _giveVerse = false;
   int getColorHexFromStr(String colorStr) {
     colorStr = "FF" + colorStr;
     colorStr = colorStr.replaceAll("#", "");
@@ -30,33 +33,50 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticationBloc bloc = BlocProvider.of<AuthenticationBloc>(context);
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(getColorHexFromStr('#0569a8')),
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: Text('SETTING'),
-        ),
-        body: Column(
-          children: <Widget>[
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 20, right: 20),
-              title: const Text('Logout'),
-              trailing: const Icon(Icons.power_settings_new),
-              onTap: () {
-                bloc.emitEvent(AuthenticationEventLogout());
-              },
+      appBar: AppBar(
+        backgroundColor: Color(getColorHexFromStr('#0569a8')),
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Text('SETTING'),
+      ),
+      // body: Column(
+      //   children: <Widget>[
+      //     DisableBioButton(),
+      //     Divider(),
+      //     // ListTile(
+      //     //   contentPadding: EdgeInsets.only(left: 20, right: 20),
+      //     //   title: const Text('Logout'),
+      //     //   trailing: const Icon(Icons.power_settings_new),
+      //     //   onTap: () {
+      //     //     bloc.emitEvent(AuthenticationEventLogout());
+      //     //   },
+      //     // ),
+      //     Divider(),
+      //   ],
+      // ),
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+            child: DisableBioButton(),
+          ),
+          Divider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15.0, 5, 15, 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Logout',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                LogOutButton(),
+              ],
             ),
-            Divider(),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 20, right: 20),
-              title: const Text('Disable FACE ID'),
-              trailing: const Icon(Icons.face),
-              onTap: () {
-                bloc.emitEvent(AuthenticationEventLogout());
-              },
-            ),
-            Divider(),
-          ],
-        ));
+          ),
+          Divider(),
+        ],
+      ),
+    );
   }
 }

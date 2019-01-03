@@ -101,6 +101,8 @@ class AuthenticationPage extends StatelessWidget {
                               return 'กรุณากรอก Username';
                             }
                           },
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                           decoration: InputDecoration(
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
@@ -111,41 +113,26 @@ class AuthenticationPage extends StatelessWidget {
                             border: new UnderlineInputBorder(
                                 borderSide:
                                     new BorderSide(color: Colors.white)),
-                            labelText: 'username',
+                            labelText: 'Username',
                             labelStyle: TextStyle(color: Colors.white),
+                            contentPadding: EdgeInsets.only(top: 15,bottom: 10)
                           ),
                           controller: _usernameController,
                         ),
-                        // decoration: new BoxDecoration(
-                        //   color: Colors.transparent,
-                        //   border: new Border(
-                        //     bottom: new BorderSide(
-                        //         color: Colors.white,
-                        //         style: BorderStyle.solid,
-                        //         width: 2),
-                        //   ),
-                        // ),
                       ),
                     ),
                   );
                   children.add(
                     ListTile(
                       title: Container(
-                        // decoration: new BoxDecoration(
-                        //   color: Colors.transparent,
-                        //   border: new Border(
-                        //     bottom: new BorderSide(
-                        //         color: Colors.white,
-                        //         style: BorderStyle.solid,
-                        //         width: 2),
-                        //   ),
-                        // ),
                         child: TextFormField(
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'กรุณากรอก Password';
                             }
                           },
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                           decoration: InputDecoration(
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
@@ -156,8 +143,9 @@ class AuthenticationPage extends StatelessWidget {
                             border: new UnderlineInputBorder(
                                 borderSide:
                                     new BorderSide(color: Colors.white)),
-                            labelText: 'password',
+                            labelText: 'Password',
                             labelStyle: TextStyle(color: Colors.white),
+                            contentPadding: EdgeInsets.only(top: 15,bottom: 10)
                           ),
                           controller: _passwordController,
                           obscureText: true,
@@ -165,7 +153,9 @@ class AuthenticationPage extends StatelessWidget {
                       ),
                     ),
                   );
-
+                  children.add(
+                    SizedBox(height: 50,)
+                  );
                   children.add(
                     ListTile(
                       title: ButtonTheme(

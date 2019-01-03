@@ -85,11 +85,16 @@ class _QrDetailState extends State<QrDetail> {
                     height: 5,
                   ),
                   Text(
-                    'แสดง Qr Code นี้เพื่อรับเงิน',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    'แสดง QR Code นี้เพื่อรับเงิน',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.grey.shade600),
                   ),
-                  new Divider(
-                    height: 26.0,
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                   color: Colors.grey.shade300,
+                    height: 10,
+                    width: double.maxFinite,
                   ),
                   SizedBox(
                     height: 10,
@@ -116,11 +121,13 @@ class _QrDetailState extends State<QrDetail> {
                     height: 20,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
                       children: <Widget>[
                         Text(
                           formatter.format(double.parse('$price')),
                           style: TextStyle(
-                              color: Colors.blue,
+                              color: Color(getColorHexFromStr('#0569a8')),
                               fontSize: 30,
                               fontWeight: FontWeight.bold),
                         ),
@@ -128,15 +135,15 @@ class _QrDetailState extends State<QrDetail> {
                           width: 10,
                         ),
                         Text(
-                          'บาท(BAHT)',
+                          'บาท (BAHT)',
                           style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,color: Colors.grey.shade600),
                         ),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 50,
+                    height: 80,
                   ),
                   Container(
                     padding: EdgeInsets.only(left: 30, right: 30),
@@ -145,8 +152,8 @@ class _QrDetailState extends State<QrDetail> {
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(10.0)),
                         child: MaterialButton(
-                          padding: EdgeInsets.all(10),
-                          color: Colors.blue,
+                          padding: EdgeInsets.all(18),
+                          color: Color(getColorHexFromStr('#0569a8')),
                           onPressed: () {
                             Navigator.pop(context);
                           },

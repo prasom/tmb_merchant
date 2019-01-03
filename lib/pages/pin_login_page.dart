@@ -17,6 +17,10 @@ class PinLoginPage extends StatefulWidget {
 }
 
 class _PinLoginPageState extends State<PinLoginPage> {
+  Future<bool> _onWillPopScope() async {
+    return false;
+  }
+
   AuthenticationState oldAuthenticationState;
   @override
   Widget build(BuildContext context) {
@@ -24,6 +28,7 @@ class _PinLoginPageState extends State<PinLoginPage> {
 
     return Scaffold(
       body: Container(
+        color: Colors.white,
         padding: EdgeInsets.all(0.0),
         child: Center(
             child: BlocEventStateBuilder<AuthenticationState>(
@@ -40,6 +45,104 @@ class _PinLoginPageState extends State<PinLoginPage> {
                 });
               }
             }
+
+            List<Widget> children = <Widget>[];
+
+            children.add(
+              new Positioned(
+                right: 10,
+                top: 10,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    size: 36,
+                  ),
+                  onPressed: () {
+                    bloc.emitEvent(AuthenticationEventLogout());
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.of(context).pushReplacementNamed('/decision');
+                    });
+                  },
+                ),
+              ),
+            );
+
+            children.add(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(top: 50),
+                    width: 80,
+                    padding: EdgeInsets.all(12),
+                    child: Image(
+                      image: AssetImage('assets/blue_logo.png'),
+                    ),
+                  ),
+                  Text('กรุณาใส่รหัสผ่าน'),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  PinIndicator(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Expanded(
+                      child: Container(
+                    padding: EdgeInsets.only(left: 30, right: 30),
+                    child: GridView.count(
+                      crossAxisCount: 3,
+                      children: <Widget>[
+                        PinButton(
+                          pinNumber: '1',
+                        ),
+                        PinButton(
+                          pinNumber: '2',
+                        ),
+                        PinButton(
+                          pinNumber: '3',
+                        ),
+                        PinButton(
+                          pinNumber: '4',
+                        ),
+                        PinButton(
+                          pinNumber: '5',
+                        ),
+                        PinButton(
+                          pinNumber: '6',
+                        ),
+                        PinButton(
+                          pinNumber: '7',
+                        ),
+                        PinButton(
+                          pinNumber: '8',
+                        ),
+                        PinButton(
+                          pinNumber: '9',
+                        ),
+                        BioMetricButton(),
+                        PinButton(
+                          pinNumber: '0',
+                        ),
+                        PinDeleteButton()
+                      ],
+                    ),
+                  )),
+                ],
+              ),
+            );
+
+            // Display a text if the authentication failed
+            if (state.hasFailed) {
+              children.add(
+                Text(
+                  'Authentication failure!',
+                  style: TextStyle(color: Colors.redAccent),
+                ),
+              );
+            }
+
             return StreamBuilder<int>(
               stream: bloc.pintSize,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -47,72 +150,97 @@ class _PinLoginPageState extends State<PinLoginPage> {
                 if (totalPin == 6) {
                   bloc.emitEvent(AuthenticationEventPinLogin());
                 }
-
                 return SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 50),
-                        width: 80,
-                        padding: EdgeInsets.all(12),
-                        child: Image(
-                          image: AssetImage('assets/blue_logo.png'),
-                        ),
-                      ),
-                      Text('กรุณาใส่รหัสผ่าน'),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      PinIndicator(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                          child: Container(
-                        padding: EdgeInsets.only(left: 30, right: 30),
-                        child: GridView.count(
-                          crossAxisCount: 3,
-                          children: <Widget>[
-                            PinButton(
-                              pinNumber: '1',
-                            ),
-                            PinButton(
-                              pinNumber: '2',
-                            ),
-                            PinButton(
-                              pinNumber: '3',
-                            ),
-                            PinButton(
-                              pinNumber: '4',
-                            ),
-                            PinButton(
-                              pinNumber: '5',
-                            ),
-                            PinButton(
-                              pinNumber: '6',
-                            ),
-                            PinButton(
-                              pinNumber: '7',
-                            ),
-                            PinButton(
-                              pinNumber: '8',
-                            ),
-                            PinButton(
-                              pinNumber: '9',
-                            ),
-                            BioMetricButton(),
-                            PinButton(
-                              pinNumber: '0',
-                            ),
-                            PinDeleteButton()
-                          ],
-                        ),
-                      )),
-                    ],
+                  child: Stack(
+                    children: children,
                   ),
                 );
+                // return SafeArea(
+                //   child: Stack(
+                //     children: <Widget>[
+                //       new Positioned(
+                //         right: 10,
+                //         top: 10,
+                //         child: IconButton(
+                //           icon: Icon(
+                //             Icons.close,
+                //             size: 36,
+                //           ),
+                //           onPressed: () {
+                //             bloc.emitEvent(AuthenticationEventLogout());
+                //             WidgetsBinding.instance.addPostFrameCallback((_) {
+                //               Navigator.of(context)
+                //                   .pushReplacementNamed('/decision');
+                //             });
+                //           },
+                //         ),
+                //       ),
+                //       Column(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         children: <Widget>[
+                //           Container(
+                //             margin: EdgeInsets.only(top: 50),
+                //             width: 80,
+                //             padding: EdgeInsets.all(12),
+                //             child: Image(
+                //               image: AssetImage('assets/blue_logo.png'),
+                //             ),
+                //           ),
+                //           Text('กรุณาใส่รหัสผ่าน'),
+                //           SizedBox(
+                //             height: 20,
+                //           ),
+                //           PinIndicator(),
+                //           SizedBox(
+                //             height: 20,
+                //           ),
+                //           Expanded(
+                //               child: Container(
+                //             padding: EdgeInsets.only(left: 30, right: 30),
+                //             child: GridView.count(
+                //               crossAxisCount: 3,
+                //               children: <Widget>[
+                //                 PinButton(
+                //                   pinNumber: '1',
+                //                 ),
+                //                 PinButton(
+                //                   pinNumber: '2',
+                //                 ),
+                //                 PinButton(
+                //                   pinNumber: '3',
+                //                 ),
+                //                 PinButton(
+                //                   pinNumber: '4',
+                //                 ),
+                //                 PinButton(
+                //                   pinNumber: '5',
+                //                 ),
+                //                 PinButton(
+                //                   pinNumber: '6',
+                //                 ),
+                //                 PinButton(
+                //                   pinNumber: '7',
+                //                 ),
+                //                 PinButton(
+                //                   pinNumber: '8',
+                //                 ),
+                //                 PinButton(
+                //                   pinNumber: '9',
+                //                 ),
+                //                 BioMetricButton(),
+                //                 PinButton(
+                //                   pinNumber: '0',
+                //                 ),
+                //                 PinDeleteButton()
+                //               ],
+                //             ),
+                //           )),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // );
               },
             );
           },

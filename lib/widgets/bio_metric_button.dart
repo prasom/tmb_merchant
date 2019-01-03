@@ -49,8 +49,8 @@ class _BioMetricButtonState extends State<BioMetricButton> {
           localizedReason: 'Scan your fingerprint to authenticate',
           useErrorDialogs: true,
           stickyAuth: false);
-      if(authenticated){
-         bloc.emitEvent(AuthenticationEventPinLogin());
+      if (authenticated) {
+        bloc.emitEvent(AuthenticationEventPinLogin());
       }
     } on PlatformException catch (e) {
       print(e);
@@ -65,14 +65,26 @@ class _BioMetricButtonState extends State<BioMetricButton> {
   @override
   Widget build(BuildContext context) {
     AuthenticationBloc bloc = BlocProvider.of<AuthenticationBloc>(context);
-    return IconButton(
-      icon: Icon(
-        Icons.fingerprint,
-        size: 30,
+    return Container(
+      child: StreamBuilder(
+        stream: bloc.activateFaceId,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          final activateFaceId = snapshot.data;
+          if (activateFaceId) {
+            return IconButton(
+              icon: Icon(
+                Icons.fingerprint,
+                size: 30,
+              ),
+              onPressed: () {
+                _authenticate(bloc);
+              },
+            );
+          } else {
+            return Container();
+          }
+        },
       ),
-      onPressed:(){
-         _authenticate(bloc);
-      },
     );
   }
 }

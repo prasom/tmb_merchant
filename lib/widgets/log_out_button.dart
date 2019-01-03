@@ -8,7 +8,7 @@ class LogOutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticationBloc bloc = BlocProvider.of<AuthenticationBloc>(context);
     return IconButton(
-      icon: Icon(Icons.exit_to_app),
+      icon: Icon(Icons.power_settings_new),
       onPressed: () {
         bloc.emitEvent(AuthenticationEventLogout());
       },

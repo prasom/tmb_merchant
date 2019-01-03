@@ -2,6 +2,7 @@ import 'package:tmb_merchant/bloc_helpers/bloc_provider.dart';
 import 'package:tmb_merchant/blocs/authentication/authentication_bloc.dart';
 import 'package:tmb_merchant/blocs/generate_qr/qr_bloc.dart';
 import 'package:tmb_merchant/blocs/shopping/shopping_bloc.dart';
+import 'package:tmb_merchant/pages/decision_before_login_page.dart';
 import 'package:tmb_merchant/pages/decision_page.dart';
 import 'package:tmb_merchant/pages/initialization_page.dart';
 import 'package:tmb_merchant/pages/pin_login_page.dart';
@@ -21,9 +22,11 @@ class Application extends StatelessWidget {
           title: 'BLoC Samples',
           theme: new ThemeData(
             primarySwatch: Colors.blue,
+           fontFamily: 'Prompt',
           ),
           routes: {
             '/decision': (BuildContext context) => DecisionPage(),
+            '/decisionBeforeLogin': (BuildContext context) => DecisionBeforeLoginPage(),
             '/register': (BuildContext context) => RegistrationPage(),
             '/shoppingBasket': (BuildContext context) => ShoppingBasketPage(),
             '/pinsetup': (BuildContext context) => PinSetUpPage(),

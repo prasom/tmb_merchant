@@ -9,12 +9,12 @@ import 'package:tmb_merchant/models/qr_model.dart';
 
 class AuthenticationBloc
     extends BlocEventStateBase<AuthenticationEvent, AuthenticationState> {
-
-  
   AuthenticationBloc()
       : super(
           initialState: AuthenticationState.notAuthenticated(),
-        );
+        ) {
+    loadActiveFaceIdState();
+  }
 
   final SharedPreferences prefs = PrefsSingleton.prefs;
   // List of all items, part of the shopping basket
@@ -23,18 +23,6 @@ class AuthenticationBloc
   @override
   Stream<AuthenticationState> eventHandler(
       AuthenticationEvent event, AuthenticationState currentState) async* {
-    
-    // if (event is AuthenticationEventCheckStorageAuth) {
-    //   _loadState();
-    //   final _user = await _getCurrentUser();
-    //   final _pin = await _getStoragePin();
-    //   if (_user.isNotEmpty && _pin.isNotEmpty) {
-    //     AuthenticationState.requirePinAuthenticated();
-    //   } else {
-    //     AuthenticationState.notAuthenticated();
-    //   }
-    // }
-    
     if (event is AuthenticationEventLogin) {
       // Inform that we are proceeding with the authentication
       yield AuthenticationState.authenticating();
@@ -56,15 +44,15 @@ class AuthenticationBloc
       yield AuthenticationState.authenticating();
 
       // Simulate a call to the authentication server
-      final hasToken = await _hasToken();
+      final currentPin = _pinStorage.join('');
+      final localStoragePin = await _getLocalStoragePin();
       // Inform that we have successfuly authenticated, or not
-      if (hasToken) {
+      if (currentPin.isNotEmpty) {
         yield AuthenticationState.pinAuthenticated(_pinStorage.join(''));
       } else {
         yield AuthenticationState.failure();
       }
     }
-
 
     if (event is AuthenticationEventSetPin) {
       // Inform that we are proceeding with the authentication
@@ -147,6 +135,12 @@ class AuthenticationBloc
     return _storagePinController.value;
   }
 
+  Future<String> _getLocalStoragePin() async {
+    /// read from keystore/keychain
+    await Future.delayed(Duration(seconds: 1));
+    return prefs.getString(PreferenceNames.loginPin);
+  }
+
   void enterPin(String item) {
     _pinStorage.add(item);
     _postActionOnPin();
@@ -166,17 +160,29 @@ class AuthenticationBloc
     _sinkStoragePinController(prefs.getString(PreferenceNames.loginPin) ?? '');
   }
 
+  // activate face id
+  final _activateFaceIdController = BehaviorSubject<bool>();
 
-  // Reactive variables
-  final _qrRequest = BehaviorSubject<QrRequest>();
+  Observable<bool> get activateFaceId => _activateFaceIdController.stream;
 
-  // Streams
-  Observable<QrRequest> get qr => _qrRequest.stream;
+  Function(bool) get _changeActivateFaceId =>
+      _activateFaceIdController.sink.add;
 
-  // Sinks
-  Function(QrRequest) get _changeQr => _qrRequest.sink.add;
+  Future changeActivateFaceId(bool request) async {
+    _changeActivateFaceId(request);
+    saveActivateFaceId();
+  }
 
-  void submitQrRequest(QrRequest request) {
-    _changeQr(request);
+  Future saveActivateFaceId() async {
+    await prefs.setBool(
+        PreferenceNames.faceId, _activateFaceIdController.value);
+  }
+
+  void toggleActiveFaceId(bool request) {
+    changeActivateFaceId(request);
+  }
+
+  void loadActiveFaceIdState() {
+    _changeActivateFaceId(prefs.getBool(PreferenceNames.faceId) ?? false);
   }
 }

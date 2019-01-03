@@ -59,6 +59,11 @@ class _InitializationPageState extends State<InitializationPage> {
               bloc: bloc,
               builder:
                   (BuildContext context, ApplicationInitializationState state) {
+                // if (state.isInitialized) {
+                //   WidgetsBinding.instance.addPostFrameCallback((_) {
+                //     Navigator.of(context).pushReplacementNamed('/decisionBeforeLogin');
+                //   });
+                // }
                 if (state.isInitialized && state.isIgnoreDecisionPage) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     Navigator.of(context).pushReplacementNamed('/loginpin');

@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
         backgroundColor: Color(getColorHexFromStr('#0569a8')),
         automaticallyImplyLeading: false,
         elevation: 0,
-        title: Text('Home'),
+        title: Text('HOME'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),
@@ -83,17 +83,18 @@ class HomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         // BoundText(widget.loginBloc.outCurrentUser),
-                        Text(
-                          'Demo',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
+                        Text('Demo',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600)),
                         SizedBox(
                           height: 5,
                         ),
                         Text(
                           'Comp Code : 12345',
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          style: TextStyle(
+                              color: Colors.grey.shade400, fontSize: 16),
                         )
                       ],
                     ),

@@ -11,11 +11,7 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    new HomePage(),
-    new QrGeneratePage(),
-    new SettingPage()
-  ];
+  List<Widget> _children = [new HomePage(), new QrGeneratePage(), new SettingPage()];
 
   @override
   void dispose() {
@@ -23,6 +19,7 @@ class _IndexPageState extends State<IndexPage> {
   }
 
   void onTabTapped(int index) {
+    this._children = [new HomePage(), new QrGeneratePage(), new SettingPage()];
     setState(() {
       _currentIndex = index;
     });
@@ -33,22 +30,21 @@ class _IndexPageState extends State<IndexPage> {
     return Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped,
-        currentIndex:
-            _currentIndex, // this will be set when a new tab is tapped
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text('HOME'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(MyFlutterApp.qr_code),
-            title: new Text('CREATE QR'),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.menu), title: Text('SETTING'))
-        ],
-      ),
+          onTap: onTabTapped,
+          currentIndex:
+              _currentIndex, // this will be set when a new tab is tapped
+          items: [
+            BottomNavigationBarItem(
+              icon: new Icon(Icons.home),
+              title: new Text('HOME'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(MyFlutterApp.qr_code),
+              title: new Text('CREATE QR'),
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.menu), title: Text('SETTING'))
+          ]),
     );
   }
 }
