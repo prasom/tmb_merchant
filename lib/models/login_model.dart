@@ -1,0 +1,7 @@
+class LoginResponseModel{
+
+}
+
+class LoginRequestModel {
+  
+}

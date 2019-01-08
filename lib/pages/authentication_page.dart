@@ -167,8 +167,7 @@ class AuthenticationPage extends StatelessWidget {
                             color: Colors.white,
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
-                                bloc.emitEvent(AuthenticationEventLogin(
-                                    name: _usernameController.text));
+                                bloc.emitEvent(AuthenticationEventLogin(passowrd: _passwordController.text, username:  _usernameController.text));
                               }
                             },
                             child: Text(

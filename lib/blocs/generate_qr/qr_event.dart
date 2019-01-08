@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tmb_merchant/bloc_helpers/bloc_event_state.dart';
 import 'package:tmb_merchant/models/qr_model.dart';
 
-abstract class QrEvent {}
+abstract class QrEvent extends BlocEvent {}
 
 class GenerateQr extends QrEvent {
   final QrRequest request;

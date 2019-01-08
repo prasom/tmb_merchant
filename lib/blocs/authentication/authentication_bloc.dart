@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tmb_merchant/apis/login_api.dart';
 import 'package:tmb_merchant/bloc_helpers/bloc_event_state.dart';
 import 'package:tmb_merchant/bloc_helpers/prefs_singleton.dart';
 import 'package:tmb_merchant/blocs/authentication/authentication_event.dart';
 import 'package:tmb_merchant/blocs/authentication/authentication_state.dart';
 import 'package:tmb_merchant/models/preference_names.dart';
 import 'package:tmb_merchant/models/qr_model.dart';
+import 'package:tmb_merchant/models/user_model.dart';
 
 class AuthenticationBloc
     extends BlocEventStateBase<AuthenticationEvent, AuthenticationState> {
@@ -14,7 +18,10 @@ class AuthenticationBloc
           initialState: AuthenticationState.notAuthenticated(),
         ) {
     loadActiveFaceIdState();
+    _loadState();
   }
+
+  LoginApi api = new LoginApi();
 
   final SharedPreferences prefs = PrefsSingleton.prefs;
   // List of all items, part of the shopping basket
@@ -26,15 +33,18 @@ class AuthenticationBloc
     if (event is AuthenticationEventLogin) {
       // Inform that we are proceeding with the authentication
       yield AuthenticationState.authenticating();
+      try {
+        // Simulate a call to the authentication server
+        final User hasToken = await api.login(event.username, event.passowrd);
 
-      // Simulate a call to the authentication server
-      final hasToken = await _hasToken();
-
-      // Inform that we have successfuly authenticated, or not
-      if (hasToken) {
-        yield AuthenticationState.authenticated(event.name);
-        await saveCurrentUser(event.name);
-      } else {
+        // Inform that we have successfuly authenticated, or not
+        if (hasToken != null) {
+          yield AuthenticationState.authenticated(hasToken.compcode);
+          await saveCurrentUser(hasToken);
+        } else {
+          yield AuthenticationState.failure();
+        }
+      } catch (e) {
         yield AuthenticationState.failure();
       }
     }
@@ -46,7 +56,7 @@ class AuthenticationBloc
       // Simulate a call to the authentication server
       var currentPin = _pinStorage.join('');
       final localStoragePin = await _getLocalStoragePin();
-      if(event.faceId){
+      if (event.faceId) {
         currentPin = localStoragePin;
       }
       // Inform that we have successfuly authenticated, or not
@@ -61,23 +71,25 @@ class AuthenticationBloc
     if (event is AuthenticationEventSetPin) {
       // Inform that we are proceeding with the authentication
       yield AuthenticationState.authenticating();
+      try {
+        // Simulate a call to the authentication server
+        final hasToken = await _hasToken();
 
-      // Simulate a call to the authentication server
-      final hasToken = await _hasToken();
-
-      // Inform that we have successfuly authenticated, or not
-      if (hasToken) {
-        yield AuthenticationState.pinAuthenticated(_pinStorage.join(''));
-        await savePin(_pinStorage.join(''));
-      } else {
-        
+        // Inform that we have successfuly authenticated, or not
+        if (hasToken) {
+          yield AuthenticationState.pinAuthenticated(_pinStorage.join(''));
+          await savePin(_pinStorage.join(''));
+        } else {
+          yield AuthenticationState.failure();
+        }
+      } catch (e) {
         yield AuthenticationState.failure();
       }
     }
 
     if (event is AuthenticationEventLogout) {
       yield AuthenticationState.notAuthenticated();
-      await deletePin();
+      await deleteCurrentState();
     }
   }
 
@@ -89,9 +101,9 @@ class AuthenticationBloc
   //     BehaviorSubject<String>(seedValue: null);
   // Stream<String> get currentUserController => _currentUserController;
 // Reactive variables
-  final _currentUserController = BehaviorSubject<String>();
-  Observable<String> get _streamCurrentUser => _currentUserController.stream;
-  Function(String) get _sinkCurrentUser => _currentUserController.sink.add;
+  final _currentUserController = BehaviorSubject<User>();
+  Observable<User> get streamCurrentUser => _currentUserController.stream;
+  Function(User) get _sinkCurrentUser => _currentUserController.sink.add;
 
   final _storagePinController = BehaviorSubject<String>();
   Observable<String> get _streamStoragePinController =>
@@ -110,16 +122,23 @@ class AuthenticationBloc
     return true;
   }
 
+  Future<User> _loginToken(username, password) async {
+    /// read from keystore/keychain
+    final user = await api.login(username, password);
+    return user;
+  }
+
   // Persistence Functions
-  Future saveCurrentUser(String token) async {
-    await prefs.setString(PreferenceNames.currentUser, token);
+  Future saveCurrentUser(User token) async {
+    String userJson = jsonEncode(token);
+    await prefs.setString(PreferenceNames.currentUser, userJson);
+    _sinkCurrentUser(token);
   }
 
   // Persistence Functions
   Future savePin(String pin) async {
     await prefs.setString(PreferenceNames.loginPin, pin);
   }
-
 
   // Persistence Functions
   Future resetPin() async {
@@ -128,14 +147,14 @@ class AuthenticationBloc
   }
 
   // Persistence Functions
-  Future deletePin() async {
+  Future deleteCurrentState() async {
     _pinSizeController.add(0);
     _pinStorage.clear();
     await prefs.setString(PreferenceNames.loginPin, null);
     await prefs.setString(PreferenceNames.currentUser, null);
   }
 
-  Future<String> _getCurrentUser() async {
+  Future<User> _getCurrentUser() async {
     /// read from keystore/keychain
     await Future.delayed(Duration(seconds: 1));
     return _currentUserController.value;
@@ -168,8 +187,12 @@ class AuthenticationBloc
   }
 
   _loadState() {
-    _sinkCurrentUser(prefs.getString(PreferenceNames.currentUser) ?? '');
-    _sinkStoragePinController(prefs.getString(PreferenceNames.loginPin) ?? '');
+    final _currentUser = prefs.getString(PreferenceNames.currentUser) ?? null;
+    if (_currentUser != null) {
+      Map<String, dynamic> user = jsonDecode(_currentUser);
+      final finalUser = User.fromJson(user);
+      _sinkCurrentUser(finalUser);
+    }
   }
 
   // activate face id

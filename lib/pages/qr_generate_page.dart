@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tmb_merchant/bloc_helpers/bloc_provider.dart';
+import 'package:tmb_merchant/blocs/authentication/authentication_bloc.dart';
 import 'package:tmb_merchant/blocs/generate_qr/qr_bloc.dart';
 import 'package:tmb_merchant/blocs/generate_qr/qr_event.dart';
 import 'package:tmb_merchant/blocs/generate_qr/qr_state.dart';
 import 'package:tmb_merchant/models/qr_model.dart';
+import 'package:tmb_merchant/models/user_model.dart';
 import 'package:tmb_merchant/pages/qr_detail_page.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:tmb_merchant/widgets/merchant_header.dart';
 
 class QrGeneratePage extends StatelessWidget {
   int getColorHexFromStr(String colorStr) {
@@ -44,384 +47,222 @@ class QrGeneratePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     QrBloc bloc = BlocProvider.of<QrBloc>(context);
+    AuthenticationBloc userBloc = BlocProvider.of<AuthenticationBloc>(context);
 
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        backgroundColor: Color(getColorHexFromStr('#0569a8')),
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Text('CREATE QR'),
-      ),
-      body: Container(
-          child: Padding(
-        padding: EdgeInsets.all(0),
-        child: Form(
-          key: _formKey,
-          child: FormKeyboardActions(
-            keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-            keyboardBarColor: Colors.grey[200],
-            nextFocus: true,
-            actions: [
-              KeyboardAction(
-                focusNode: _nodeText1,
-              ),
-            ],
-            child: Padding(
-              padding: const EdgeInsets.all(0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            width: 80,
-                            padding: EdgeInsets.all(12),
-                            child: Image(
-                              image: AssetImage('assets/blue_logo.png'),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text('Demo',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade600)),
-                                SizedBox(
-                                  height: 5,
+    return StreamBuilder(
+      stream: userBloc.streamCurrentUser,
+      builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+        String _compcode = '';
+        if (snapshot.data != null) {
+          _compcode = snapshot.data.compcode;
+        }
+        return Scaffold(
+          resizeToAvoidBottomPadding: false,
+          appBar: AppBar(
+            backgroundColor: Color(getColorHexFromStr('#0569a8')),
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            title: Text('CREATE QR'),
+          ),
+          body: Container(
+              child: Padding(
+            padding: EdgeInsets.all(0),
+            child: Form(
+              key: _formKey,
+              child: FormKeyboardActions(
+                keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+                keyboardBarColor: Colors.grey[200],
+                nextFocus: true,
+                actions: [
+                  KeyboardAction(
+                    focusNode: _nodeText1,
+                  ),
+                ],
+                child: Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                width: 80,
+                                padding: EdgeInsets.all(12),
+                                child: Image(
+                                  image: AssetImage('assets/blue_logo.png'),
                                 ),
-                                Text(
-                                  'Comp Code : 12345',
-                                  style: TextStyle(
-                                      color: Colors.grey.shade400,
-                                      fontSize: 16),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Divider(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Text(
-                        'เลขที่สัญญา/ref1',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.grey.shade600),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: TextFormField(
-                        controller: ref1Controller,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'กรุณากรอก เลขที่สัญญา/ref1';
-                          }
-                        },
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: OutlineInputBorder(),
-                          hintText: 'เลขที่สัญญา/ref1',
-                          hintStyle: TextStyle(color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 40,),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Text(
-                        'หมายเลขอ้างอิง/ref2',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.grey.shade600),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: TextFormField(
-                        controller: ref2Controller,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'กรุณากรอก หมายเลขอ้างอิง/ref2';
-                          }
-                        },
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            border: OutlineInputBorder(),
-                            hintText: 'หมายเลขอ้างอิง/ref2',
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      color: Colors.grey.shade300,
-                      child: Container(
-                        width: double.maxFinite,
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                          child: Text(
-                            'จำนวนเงิน',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.grey.shade600),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                             MerchantHeader(),
+                            ],
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Material(
-                        elevation: 0.0,
-                        borderRadius: BorderRadius.circular(2.0),
-                        child: TextFormField(
-                          focusNode: _nodeText1,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'กรุณากรอก จำนวนเงิน';
-                            }
-                          },
-                          textAlign: TextAlign.right,
-                          controller: priceController,
-                          keyboardType: TextInputType.number,
-                          style: TextStyle(
-                              fontSize: 30,
-                              color: Color(getColorHexFromStr('#0569a8')),
-                              fontWeight: FontWeight.bold),
-                          decoration: InputDecoration(
-                              labelStyle:
-                                  TextStyle(color: Colors.blue, fontSize: 20),
-                              contentPadding: EdgeInsets.all(10),
-                              hintText: '',
-                              hintStyle: TextStyle(color: Colors.grey)),
+                        Divider(),
+                        SizedBox(
+                          height: 20,
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: ButtonTheme(
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0)),
-                        minWidth: double.infinity,
-                        child: MaterialButton(
-                          padding: EdgeInsets.all(18),
-                          color: Color(getColorHexFromStr('#0569a8')),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              bloc.submitQrRequest(QrRequest(
-                                  ref1: ref1Controller.text,
-                                  ref2: ref2Controller.text,
-                                  price: priceController.text));
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => QrDetail()),
-                              );
-                            }
-                          },
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Text(
-                            'สร้าง QR Code',
+                            'เลขที่สัญญา/ref1',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
-                                color: Colors.white),
+                                color: Colors.grey.shade600),
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: TextFormField(
+                            controller: ref1Controller,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'กรุณากรอก เลขที่สัญญา/ref1';
+                              }
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(10),
+                              border: OutlineInputBorder(),
+                              hintText: 'เลขที่สัญญา/ref1',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Text(
+                            'หมายเลขอ้างอิง/ref2',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Colors.grey.shade600),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: TextFormField(
+                            controller: ref2Controller,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'กรุณากรอก หมายเลขอ้างอิง/ref2';
+                              }
+                            },
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10),
+                                border: OutlineInputBorder(),
+                                hintText: 'หมายเลขอ้างอิง/ref2',
+                                hintStyle: TextStyle(color: Colors.grey)),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          color: Colors.grey.shade300,
+                          child: Container(
+                            width: double.maxFinite,
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                              child: Text(
+                                'จำนวนเงิน',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Colors.grey.shade600),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Material(
+                            elevation: 0.0,
+                            borderRadius: BorderRadius.circular(2.0),
+                            child: TextFormField(
+                              focusNode: _nodeText1,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'กรุณากรอก จำนวนเงิน';
+                                }
+                              },
+                              textAlign: TextAlign.right,
+                              controller: priceController,
+                              keyboardType: TextInputType.number,
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  color: Color(getColorHexFromStr('#0569a8')),
+                                  fontWeight: FontWeight.bold),
+                              decoration: InputDecoration(
+                                  labelStyle: TextStyle(
+                                      color: Colors.blue, fontSize: 20),
+                                  contentPadding: EdgeInsets.all(10),
+                                  hintText: '',
+                                  hintStyle: TextStyle(color: Colors.grey)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          child: ButtonTheme(
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(10.0)),
+                            minWidth: double.infinity,
+                            child: MaterialButton(
+                              padding: EdgeInsets.all(18),
+                              color: Color(getColorHexFromStr('#0569a8')),
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  final request = new QrRequest(
+                                    ref1: ref1Controller.text,
+                                    ref2: ref2Controller.text,
+                                    price: priceController.text,
+                                    compcode: _compcode,
+                                  );
+                                  bloc.emitEvent(GenerateQr(request: request));
+                                  // bloc.submitQrRequest(QrRequest(
+                                  //   ref1: ref1Controller.text,
+                                  //   ref2: ref2Controller.text,
+                                  //   price: priceController.text,
+                                  //   compcode: _compcode,
+                                  // ));
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => QrDetail()),
+                                  );
+                                }
+                              },
+                              child: Text(
+                                'สร้าง QR Code',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      )),
-    );
-  }
-
-  Widget _form(_context, _bloc) {
-    FocusNode _nodeText1 = FocusNode();
-
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'เลขที่สัญญา/ref1',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.grey.shade600),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Material(
-                      elevation: 0.0,
-                      borderRadius: BorderRadius.circular(2.0),
-                      child: TextFormField(
-                        controller: ref1Controller,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'กรุณากรอก เลขที่สัญญา/ref1';
-                          }
-                        },
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            border: OutlineInputBorder(),
-                            hintText: 'เลขที่สัญญา/ref1',
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      )),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Text(
-                  'หมายเลขอ้างอิง/ref2',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.grey.shade600),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Material(
-                    elevation: 0.0,
-                    borderRadius: BorderRadius.circular(2.0),
-                    child: TextFormField(
-                      controller: ref2Controller,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'กรุณากรอก หมายเลขอ้างอิง/ref2';
-                        }
-                      },
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: OutlineInputBorder(),
-                          hintText: 'หมายเลขอ้างอิง/ref2',
-                          hintStyle: TextStyle(color: Colors.grey)),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  color: Colors.grey.shade300,
-                  child: Container(
-                    width: double.maxFinite,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      child: Text(
-                        'จำนวนเงิน',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: Colors.grey.shade600),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: Material(
-                      elevation: 0.0,
-                      borderRadius: BorderRadius.circular(2.0),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'กรุณากรอก จำนวนเงิน';
-                          }
-                        },
-                        textAlign: TextAlign.right,
-                        controller: priceController,
-                        keyboardType: TextInputType.number,
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: Color(getColorHexFromStr('#0569a8')),
-                            fontWeight: FontWeight.bold),
-                        decoration: InputDecoration(
-                            labelStyle:
-                                TextStyle(color: Colors.blue, fontSize: 20),
-                            contentPadding: EdgeInsets.all(10),
-                            hintText: '',
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      )),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-            child: ButtonTheme(
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(10.0)),
-                minWidth: double.infinity,
-                child: MaterialButton(
-                  padding: EdgeInsets.all(18),
-                  color: Color(getColorHexFromStr('#0569a8')),
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      _bloc.submitQrRequest(QrRequest(
-                          ref1: ref1Controller.text,
-                          ref2: ref2Controller.text,
-                          price: priceController.text));
-                      Navigator.push(
-                        _context,
-                        MaterialPageRoute(builder: (context) => QrDetail()),
-                      );
-                    }
-                  },
-                  child: Text(
-                    'สร้าง QR Code',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.white),
-                  ),
-                )),
-          ),
-        ],
-      ),
+          )),
+        );
+      },
     );
   }
 

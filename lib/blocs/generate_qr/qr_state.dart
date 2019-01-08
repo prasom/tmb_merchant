@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:tmb_merchant/bloc_helpers/bloc_event_state.dart';
 import 'package:tmb_merchant/models/qr_model.dart';
 
-class QrState {
+class QrState extends BlocState {
   final bool isLoading;
   final bool isGenerateButtonEnabled;
   final String error;
   final String qr;
-  final QrRequest  request;
+  final QrRequest request;
 
-  const QrState({
+  QrState({
     @required this.isLoading,
     @required this.isGenerateButtonEnabled,
     @required this.error,
     @required this.qr,
-    @required this.request
+    @required this.request,
   });
 
   factory QrState.initial() {
     return QrState(
-      isLoading: false,
-      isGenerateButtonEnabled: true,
-      error: '',
-      qr: '',
-      request: null
-    );
+        isLoading: false,
+        isGenerateButtonEnabled: true,
+        error: '',
+        qr: '',
+        request: null);
   }
 
   factory QrState.loading() {
@@ -44,14 +44,13 @@ class QrState {
     );
   }
 
-  factory QrState.success(String reponse,QrRequest request) {
+  factory QrState.success(String redponse, QrRequest request) {
     return QrState(
-      isLoading: false,
-      isGenerateButtonEnabled: true,
-      error: '',
-      qr: reponse,
-      request: request
-    );
+        isLoading: false,
+        isGenerateButtonEnabled: true,
+        error: '',
+        qr: redponse,
+        request: request);
   }
 
   factory QrState.edit() {
