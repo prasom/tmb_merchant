@@ -17,7 +17,7 @@ class HomeImageView extends StatelessWidget {
           final String _logo = user.logo;
 
           return new Image.network(
-            '$_logo?raw=true',
+            _logo,
             fit: BoxFit.cover,
           );
         } else {
