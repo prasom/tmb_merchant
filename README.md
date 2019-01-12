@@ -2,6 +2,10 @@
 
 This is flutter learnning project.
 
+demo user
+user: merchant
+pass : demo
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
