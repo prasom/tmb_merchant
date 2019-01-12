@@ -1,6 +1,6 @@
 # tmb_merchant
 
-A new Flutter project.
+This is flutter learnning project.
 
 ## Getting Started
 
