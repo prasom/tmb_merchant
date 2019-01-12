@@ -15,7 +15,7 @@ class PinDeleteButton extends StatelessWidget {
           return OutlineButton(
             child: Icon(Icons.backspace),
             shape: CircleBorder(),
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(15),
             onPressed: () {
              bloc.removePin();
             },

@@ -69,17 +69,21 @@ class _BioMetricButtonState extends State<BioMetricButton> {
       child: StreamBuilder(
         stream: bloc.activateFaceId,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          final activateFaceId = snapshot.data;
-          if (activateFaceId) {
-            return IconButton(
-              icon: Icon(
-                Icons.fingerprint,
-                size: 30,
-              ),
-              onPressed: () {
-                _authenticate(bloc);
-              },
-            );
+          if (snapshot.hasData) {
+            final activateFaceId = snapshot.data;
+            if (activateFaceId) {
+              return IconButton(
+                icon: Icon(
+                  Icons.fingerprint,
+                  size: 30,
+                ),
+                onPressed: () {
+                  _authenticate(bloc);
+                },
+              );
+            } else {
+              return Container();
+            }
           } else {
             return Container();
           }

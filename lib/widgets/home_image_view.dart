@@ -3,7 +3,6 @@ import 'package:tmb_merchant/bloc_helpers/bloc_provider.dart';
 import 'package:tmb_merchant/blocs/authentication/authentication_bloc.dart';
 import 'package:tmb_merchant/models/user_model.dart';
 
-const String _imageUrl = ' https://i.ibb.co/GFtPFpH/qr-home.png';
 
 class HomeImageView extends StatelessWidget {
   @override

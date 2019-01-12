@@ -58,7 +58,7 @@ class _PinSetUpPageState extends State<PinSetUpPage> {
                       ),
                       Expanded(
                         child: Container(
-                          padding: EdgeInsets.only(left: 30, right: 30),
+                          padding: EdgeInsets.only(left: 45, right: 45),
                           child: GridView.count(
                             crossAxisCount: 3,
                             children: <Widget>[

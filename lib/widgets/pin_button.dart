@@ -17,7 +17,7 @@ class PinButton extends StatelessWidget {
           final pinSize = snapshot.data;
           return OutlineButton(
             shape: CircleBorder(),
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(15.0),
             onPressed: () {
               if (pinSize < 6) {
                 bloc.enterPin(pinNumber);

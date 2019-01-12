@@ -127,17 +127,9 @@ class _QrDetailState extends State<QrDetail> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Container(
-                            height: 50,
-                              child: new QrImageView(
-                            imageUrl: qrUrl,
-                          ))
-                          // new Image.network(qrUrl,fit: BoxFit.cover,)
-                          // FadeInImage.memoryNetwork(
-                          //   image: qrUrl,
-                          //   placeholder: kTransparentImage,
-                          //   fit: BoxFit.cover,
-                          // )
+                          Expanded(
+                            child: new QrImageView(),
+                          )
                         ],
                       ),
                     ),
