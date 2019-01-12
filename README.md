@@ -2,9 +2,9 @@
 
 This is flutter learnning project.
 
-demo user
-user: merchant
-pass : demo
+## demo user
+* user: merchant
+* pass : demo
 
 ## Getting Started
 
