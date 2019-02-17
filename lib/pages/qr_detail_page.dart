@@ -54,17 +54,7 @@ class _QrDetailState extends State<QrDetail> {
         elevation: 0,
         title: Text('QR CODE'),
         actions: <Widget>[
-          QrShareButton()
-          // IconButton(
-          //   icon: Icon(Icons.share),
-          //   onPressed: () async {
-          //     try {
-          //       final File imageUri = await _downloadFile(
-          //           'https://i.ibb.co/GFtPFpH/qr-home.png', 'merchant_qr');
-          //       ImageShare.shareImage(filePath: imageUri.path);
-          //     } catch (e) {}
-          //   },
-          // )
+          QrShareButton(),
         ],
       ),
       body: Container(
@@ -74,16 +64,25 @@ class _QrDetailState extends State<QrDetail> {
           if (state.isLoading) {
             return PendingActionNoBg();
           }
-
+          if (state.error.isNotEmpty) {
+            return Center(
+              child: Text(
+                'เกิดข้อผิดพลาดกรุณาลองให่อีกครั้ง!',
+                style: TextStyle(color: Colors.red),
+              ),
+            );
+          }
           List<Widget> children = <Widget>[];
-
           children.add(Center(
             child: StreamBuilder(
               stream: bloc.qr,
               builder:
                   (BuildContext context, AsyncSnapshot<QrRequest> snapshot) {
+                if (!snapshot.hasData) {
+                  return PendingActionNoBg();
+                }
                 final price = snapshot.data != null ? snapshot.data.price : '0';
-                final qrUrl = snapshot.data != null ? snapshot.data.qrUrl : '';
+                final ref1 = snapshot.data != null ? snapshot.data.ref1 : '';
                 return Column(
                   children: <Widget>[
                     Container(
@@ -128,7 +127,12 @@ class _QrDetailState extends State<QrDetail> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Expanded(
-                            child: new QrImageView(),
+                            child: new Image.network(
+                              'https://promptpay.io/$ref1/$price.png',
+                              fit: BoxFit.contain,
+                            ),
+                            // child: Image.network(
+                            //     'https://promptpay.io/$ref1/$price'),
                           )
                         ],
                       ),

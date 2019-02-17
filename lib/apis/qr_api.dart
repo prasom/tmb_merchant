@@ -6,24 +6,32 @@ import 'package:tmb_merchant/models/login_model.dart';
 import 'package:tmb_merchant/models/user_model.dart';
 import 'package:tmb_merchant/utils/network_util.dart';
 
+import 'package:http/http.dart' as http;
+
 class QrApi {
   NetworkUtil _netUtil = new NetworkUtil();
-  static final BASE_URL = "https://ggdemo-212710.appspot.com/api";
-  static final GENQR_URL = BASE_URL + "/qrGenerate";
-  Future<String> generateQr(String compcode,String ref1, String ref2,String price) {
-    try {
-      return _netUtil.post(GENQR_URL, body: {
-        "compcode": compcode,
-        "ref1": ref1,
-        "ref2": ref2,
-        "price": price,
-      }).then((dynamic res) {
-        print(res.toString());
-        if (res["message"] != null) throw new Exception(res["message"]);
-        return res["result"]['qrUrl'];
-      });
-    } catch (e) {
-      throw new Exception('login fail');
-    }
+  static final BASE_URL = "https://promptpay.io";
+  Future<String> generateQr(
+      String compcode, String ref1, String ref2, String price) {
+    final qrUrl = '$BASE_URL/$ref1/$price.png';
+    return http.get(qrUrl).then((http.Response response) {
+      final String res = response.body;
+      final int statusCode = response.statusCode;
+      if (statusCode < 200 || statusCode >= 400 || json == null) {
+        throw new Exception("Error while fetching data");
+      }
+
+      return qrUrl;
+    });
+    // try {
+    //   final qrUrl = '$BASE_URL/$ref1/$price.png';
+    //   return _netUtil.get(qrUrl).then((dynamic res) {
+    //     if (res["errorMessage"] != null)
+    //       throw new Exception(res["errorMessage"]);
+    //     return qrUrl.toString();
+    //   });
+    // } catch (e) {
+    //   throw new Exception('login fail');
+    // }
   }
 }

@@ -14,10 +14,9 @@ class HomeImageView extends StatelessWidget {
         if (snapshot.hasData) {
           final User user = snapshot.data;
           final String _logo = user.logo;
-
           return new Image.network(
             _logo,
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
           );
         } else {
            return Container(child: Center(child: Text('Loading...'),),);

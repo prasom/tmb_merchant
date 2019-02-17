@@ -55,6 +55,7 @@ class QrGeneratePage extends StatelessWidget {
         String _compcode = '';
         if (snapshot.data != null) {
           _compcode = snapshot.data.compcode;
+          ref1Controller.text =_compcode;
         }
         return Scaffold(
           resizeToAvoidBottomPadding: false,
@@ -76,6 +77,9 @@ class QrGeneratePage extends StatelessWidget {
                 actions: [
                   KeyboardAction(
                     focusNode: _nodeText1,
+                  ),
+                  KeyboardAction(
+                    focusNode: _nodeText2,
                   ),
                 ],
                 child: Padding(
@@ -99,7 +103,7 @@ class QrGeneratePage extends StatelessWidget {
                               SizedBox(
                                 width: 10,
                               ),
-                             MerchantHeader(),
+                              MerchantHeader(),
                             ],
                           ),
                         ),
@@ -110,7 +114,7 @@ class QrGeneratePage extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Text(
-                            'เลขที่สัญญา/ref1',
+                            'เบอร์โทรศัพท์ / เลขประจำตัวประชาชน',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
@@ -120,16 +124,18 @@ class QrGeneratePage extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: TextFormField(
+                            focusNode: _nodeText2,
                             controller: ref1Controller,
+                            keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'กรุณากรอก เลขที่สัญญา/ref1';
+                                return 'เบอร์โทรศัพท์ / เลขประจำตัวประชาชน';
                               }
                             },
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10),
                               border: OutlineInputBorder(),
-                              hintText: 'เลขที่สัญญา/ref1',
+                              hintText: 'เบอร์โทรศัพท์ / เลขประจำตัวประชาชน',
                               hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
@@ -137,35 +143,35 @@ class QrGeneratePage extends StatelessWidget {
                         SizedBox(
                           height: 40,
                         ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Text(
-                            'หมายเลขอ้างอิง/ref2',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.grey.shade600),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: TextFormField(
-                            controller: ref2Controller,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'กรุณากรอก หมายเลขอ้างอิง/ref2';
-                              }
-                            },
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(10),
-                                border: OutlineInputBorder(),
-                                hintText: 'หมายเลขอ้างอิง/ref2',
-                                hintStyle: TextStyle(color: Colors.grey)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //   child: Text(
+                        //     'หมายเลขอ้างอิง/ref2',
+                        //     style: TextStyle(
+                        //         fontWeight: FontWeight.bold,
+                        //         fontSize: 18,
+                        //         color: Colors.grey.shade600),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //   child: TextFormField(
+                        //     controller: ref2Controller,
+                        //     validator: (value) {
+                        //       if (value.isEmpty) {
+                        //         return 'กรุณากรอก หมายเลขอ้างอิง/ref2';
+                        //       }
+                        //     },
+                        //     decoration: InputDecoration(
+                        //         contentPadding: EdgeInsets.all(10),
+                        //         border: OutlineInputBorder(),
+                        //         hintText: 'หมายเลขอ้างอิง/ref2',
+                        //         hintStyle: TextStyle(color: Colors.grey)),
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   height: 20,
+                        // ),
                         Container(
                           color: Colors.grey.shade300,
                           child: Container(

@@ -97,7 +97,20 @@ class HomePage extends StatelessWidget {
               bottomRight: Radius.circular(15.0),
               bottomLeft: Radius.circular(15.0),
             ),
-            child: HomeImageView(),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image(
+                    height: 80,
+                    image: AssetImage('assets/promptpay_icon.jpg'),
+                  ),
+                ),
+                HomeImageView(),
+              ],
+            ),
           ),
         ));
 

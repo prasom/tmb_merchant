@@ -28,28 +28,34 @@ class QrBloc extends BlocEventStateBase<QrEvent, QrState> {
   @override
   Stream<QrState> eventHandler(QrEvent event, QrState currentState) async* {
     if (event is GenerateQr) {
-      yield QrState.loading();
-      _changeQr(event.request);
-      final qrUrl = await _genrateQr(event.request.compcode, event.request.ref1,
-          event.request.ref2, event.request.price);
-
-      if (qrUrl.isNotEmpty) {
-        final QrRequest response = new QrRequest(
-          compcode: event.request.compcode,
-          price: event.request.price,
-          ref1: event.request.ref1,
-          ref2: event.request.ref2,
-          qrUrl: qrUrl,
-        );
-        _changeQr(response);
-        yield QrState.success(qrUrl, event.request);
-      } else {
-        yield QrState.failure(qrUrl);
+      try {
+        yield QrState.loading();
+        _changeQr(event.request);
+        final qrUrl = await _genrateQr(event.request.compcode,
+            event.request.ref1, event.request.ref2, event.request.price);
+        final merchantId = event.request.ref1;
+        final merchantPrice = event.request.price;
+        if (qrUrl.isNotEmpty) {
+          final QrRequest response = new QrRequest(
+            compcode: event.request.compcode,
+            price: event.request.price,
+            ref1: event.request.ref1,
+            ref2: event.request.ref2,
+            qrUrl: qrUrl,
+          );
+          _changeQr(response);
+          yield QrState.success(qrUrl, event.request);
+        } else {
+          yield QrState.failure(qrUrl);
+        }
+      } catch (e) {
+        yield QrState.failure(e.toString());
       }
     }
   }
 
   Future<String> _genrateQr(compcode, ref1, ref2, price) async {
+
     final String qrUrl = await api.generateQr(compcode, ref1, ref2, price);
     return qrUrl;
   }

@@ -167,11 +167,65 @@ class AuthenticationPage extends StatelessWidget {
                             color: Colors.white,
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
-                                bloc.emitEvent(AuthenticationEventLogin(passowrd: _passwordController.text, username:  _usernameController.text));
+                                bloc.emitEvent(AuthenticationEventLogin(
+                                    passowrd: _passwordController.text,
+                                    username: _usernameController.text));
                               }
                             },
                             child: Text(
                               'Login',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.blue),
+                            ),
+                          )),
+                    ),
+                  );
+                  children.add(
+                    ListTile(
+                      title: ButtonTheme(
+                          minWidth: double.infinity,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                          child: MaterialButton(
+                            padding: EdgeInsets.all(10),
+                            color: Colors.white,
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                bloc.emitEvent(AuthenticationEventLogin(
+                                    passowrd: _passwordController.text,
+                                    username: _usernameController.text));
+                              }
+                            },
+                            child: Text(
+                              'Login With Facebook',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.blue),
+                            ),
+                          )),
+                    ),
+                  );
+                  children.add(
+                    ListTile(
+                      title: ButtonTheme(
+                          minWidth: double.infinity,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                          child: MaterialButton(
+                            padding: EdgeInsets.all(10),
+                            color: Colors.white,
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                bloc.emitEvent(AuthenticationEventLogin(
+                                    passowrd: _passwordController.text,
+                                    username: _usernameController.text));
+                              }
+                            },
+                            child: Text(
+                              'Login With Google',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
